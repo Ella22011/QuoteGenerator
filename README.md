@@ -7,3 +7,8 @@ Here is the link for the website: https://ella22011.github.io/QuoteGenerator/quo
 ### Contributors:
 
 *Jemina Laukkanen*
+
+*Ella Heikkinen*
+
+*Hanna Honkonen*
+
