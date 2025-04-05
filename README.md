@@ -4,3 +4,4 @@
 ### Contributors:
 
 *Jemina Laukkanen*
+*Ella Heikkinen*
