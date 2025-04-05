@@ -14,7 +14,9 @@ const quotes = [
     { text: "Opportunities don't happen, you create them.", author: "Chris Grosser" },
     { text: "A life without love is like a year without spring.", author: "Octavian Paler" },
     { text: "Nature gives to every time and season some beauties of its own.", author: "Charles Dickens" },
-    { text: "If we had no winter the spring would not be so pleasant.", author: "Anne Bradstreet" }
+    { text: "If we had no winter the spring would not be so pleasant.", author: "Anne Bradstreet" },
+    { text: "I have learned over the years that when one's mind is made up, it diminishes fear.", author: "Rosa Parks" },
+    { text: "Our lives begin to end the day we become silent about things that matter.", author: "Martin Luther King Jr." }
 ];
 
 const quoteText = document.getElementById("quote");
