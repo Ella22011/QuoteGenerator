@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;  /* Stack elements vertically */
+    align-items: center;     /* Center horizontally */
+    justify-content: center;
+    min-height: 100vh;       /* Ensure full height */
+    text-align: center;
+    background: linear-gradient(135deg, #66acea, #764ba2);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.logo-container {
+    position: absolute;
+    top: 20px;  /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%); /* Centers the logo */
+    width: 150px;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0; /* Add some space around */
+}
+
+.logo {
+    width: 150px;  /* Adjust as needed */
+    height: auto;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.quote-box {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    min-height: 120px; /* Prevents shrinking vertically */
+    width: 400px; /* Fixed width */
+    max-width: 400px; /* Prevents stretching */
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal; /* Ensures text wraps properly */
+}
+
+#quote {
+    display: block;
+    width: 100%;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+#author {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#new-quote {
+    background: #ff7eb3;
+    color: #fff;
+}
+
+#copy-quote {
+    background: #48c6ef;
+    color: #fff;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.image-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;  /* Ensures the image is vertically centered within the container */
+    overflow: hidden;
+}
+
+#random-image {
+    width: 100%;                /* Ensures the image fills the container width */
+    max-width: 500px;           /* Limits the image's width to 500px */
+    height: auto;               /* Maintains the image's aspect ratio */
+    border-radius: 10px;        /* Rounded corners for the image */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Adds a shadow around the image */
+    display: block;             /* Ensures the image is treated as a block element */
+    object-fit: cover;          /* Ensures the image fills its container, keeping its aspect ratio */
+}
