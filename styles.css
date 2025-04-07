@@ -18,17 +18,32 @@ body {
     color: #fff;
 }
 
-.logo-container {
+.header {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     position: absolute;
-    top: 20px;
-    left: 20px;
-    padding: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.logo-container {
+    
+    flex-direction: column; /* Jos haluat, että logo ja otsikko ovat päällekkäin */
+    align-items: center; /* Keskittää logo ja otsikon */
+    justify-content: center;
+    gap: 10px; /* Lisää tilaa logon ja otsikon väliin */
 }
 
 .logo {
     width: 90px;
     height: auto;
 }
+
 
 .container {
     display: flex;
@@ -47,9 +62,19 @@ body {
 h1 {
     font-size: 24px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
+.footer {
+    width: 100%; /* Ulottuu koko näytön leveyteen */
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 15px 0; /* Pieni sisennys ylhäältä ja alhaalta */
+    text-align: center; /* Keskittää tekstin */
+    position: fixed; /* Pysyy alareunassa */
+    bottom: 0; /* Sijoittaa footerin alas */
+    left: 0; /* Ulottuu vasempaan reunaan */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+}
 .quote-box {
     background: rgba(255, 255, 255, 0.2);
     padding: 20px;
