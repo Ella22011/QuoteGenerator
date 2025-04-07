@@ -14,7 +14,9 @@ const quotes = [
     { text: "Opportunities don't happen, you create them.", author: "Chris Grosser" },
     { text: "A life without love is like a year without spring.", author: "Octavian Paler" },
     { text: "Nature gives to every time and season some beauties of its own.", author: "Charles Dickens" },
-    { text: "If we had no winter the spring would not be so pleasant.", author: "Anne Bradstreet" }
+    { text: "If we had no winter the spring would not be so pleasant.", author: "Anne Bradstreet" },
+    { text: "I have learned over the years that when one's mind is made up, it diminishes fear.", author: "Rosa Parks" },
+    { text: "Our lives begin to end the day we become silent about things that matter.", author: "Martin Luther King Jr." }
 ];
 
 const quoteText = document.getElementById("quote");
@@ -56,19 +58,25 @@ function changeBackgroundColor() {
     }
 }
 
-// Function to fetch a random dog image from the Dog CEO API
-function generateRandomDogImage() {
-    const dogApiUrl = "https://dog.ceo/api/breeds/image/random";  
+function generateRandomAnimalImage() {
+    const useCat = Math.random() > 0.5;
 
-    fetch(dogApiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const dogImageUrl = data.message;  // Get the URL of the dog image from the response
-            randomImage.src = dogImageUrl;  // Set the image source to the dog image
-        })
-        .catch(error => {
-            console.error("Error fetching image from Dog CEO API:", error);
-        });
+    if (useCat) {
+        // Cataas provides direct image URLs
+        const catUrl = `https://cataas.com/cat?${new Date().getTime()}`; // Add cache buster
+        randomImage.src = catUrl;
+
+    } else {
+        const dogApiUrl = "https://dog.ceo/api/breeds/image/random";
+        fetch(dogApiUrl)
+            .then(response => response.json())
+            .then(data => {
+                randomImage.src = data.message;
+            })
+            .catch(error => {
+                console.error("Error fetching dog image:", error);
+            });
+    }
 }
 
 // Function to generate a quote (randomly from API or hardcoded list)
@@ -83,18 +91,18 @@ function generateQuote() {
                 quoteText.textContent = `"${data.quote}"`;
                 authorText.textContent = `- ${data.author || "Unknown"}`;
                 changeBackgroundColor();
-                generateRandomDogImage(); // Get a new random dog image
+                generateRandomAnimalImage()
             })
             .catch(error => {
                 console.error("Error fetching from API:", error);
                 getHardcodedQuote(); // Fallback to hardcoded quote
                 changeBackgroundColor();
-                generateRandomDogImage(); // Fetch a new random dog image
+                generateRandomAnimalImage()
             });
     } else {
         getHardcodedQuote();
         changeBackgroundColor();
-        generateRandomDogImage(); // Fetch a new random dog image
+        generateRandomAnimalImage()
     }
 }
 
@@ -124,4 +132,4 @@ copyQuoteBtn.addEventListener("click", copyQuote);
 
 // Generate an initial quote when the page loads
 generateQuote();
-generateRandomDogImage(); // Get a new random dog image
+generateRandomAnimalImage();
