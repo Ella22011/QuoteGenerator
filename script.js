@@ -48,7 +48,7 @@ function getRandomColor(){
 function changeBackgroundColor() {
     const backgroundColor = getRandomColor();
     document.body.style.background = backgroundColor;
-    
+
     const brightness = getBrightness(backgroundColor);
 
     if (brightness > 128) {
@@ -120,11 +120,43 @@ function copyQuote() {
     const textToCopy = `${quoteText.textContent} ${authorText.textContent}`;
     
     navigator.clipboard.writeText(textToCopy).then(() => {
-        alert("Quote copied to clipboard!");
+        showCopyMessage();  // Show confirmation message when copied
     }).catch(err => {
         console.error("Error copying text: ", err);
     });
 }
+
+// Function to display the "quote copied" message
+function showCopyMessage() {
+    const message = document.createElement('div');
+    message.innerText = 'Quote copied to clipboard! 🐾';
+    message.style.position = 'fixed';
+    message.style.bottom = '20px';
+    message.style.right = '20px';
+    message.style.background = '#ff7eb3';
+    message.style.color = '#fff';
+    message.style.padding = '10px 20px';
+    message.style.borderRadius = '8px';
+    message.style.fontSize = '14px';
+    message.style.zIndex = '1000';
+    message.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+    document.body.appendChild(message);
+
+    // Remove message after 2 seconds
+    setTimeout(() => {
+        message.remove();
+    }, 2000);
+}
+
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        btn.classList.remove('bling');
+        void btn.offsetWidth;
+        btn.classList.add('bling');
+    });
+});
 
 // Event Listeners
 newQuoteBtn.addEventListener("click", generateQuote);
@@ -133,3 +165,4 @@ copyQuoteBtn.addEventListener("click", copyQuote);
 // Generate an initial quote when the page loads
 generateQuote();
 generateRandomAnimalImage();
+
