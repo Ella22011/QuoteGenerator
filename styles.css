@@ -12,42 +12,69 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    padding: 20px;
     text-align: center;
     background: linear-gradient(135deg, #66acea, #764ba2);
     color: #fff;
+}
+
+.header {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px;
     margin: 0;
-    padding: 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .logo-container {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: auto;
-    padding: 0;
+    
+    flex-direction: column; /* Jos haluat, että logo ja otsikko ovat päällekkäin */
+    align-items: center; /* Keskittää logo ja otsikon */
+    justify-content: center;
+    gap: 10px; /* Lisää tilaa logon ja otsikon väliin */
 }
 
 .logo {
-    width: 150px;
+    width: 90px;
     height: auto;
 }
 
+
 .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     max-width: 600px;
-    width: 90%;
+    width: 100%;
 }
 
 h1 {
     font-size: 24px;
     font-weight: 600;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
+.footer {
+    width: 100%; /* Ulottuu koko näytön leveyteen */
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 15px 0; /* Pieni sisennys ylhäältä ja alhaalta */
+    text-align: center; /* Keskittää tekstin */
+    position: fixed; /* Pysyy alareunassa */
+    bottom: 0; /* Sijoittaa footerin alas */
+    left: 0; /* Ulottuu vasempaan reunaan */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+}
 .quote-box {
     background: rgba(255, 255, 255, 0.2);
     padding: 20px;
@@ -60,19 +87,22 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .quote-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     gap: 20px;
+    width: 100%;
 }
 
 .text-content {
     max-width: 220px;
-    text-align: left;
+    width: 100%;
+    text-align: center;
 }
 
 #quote {
@@ -89,7 +119,7 @@ h1 {
     font-size: 14px;
     font-style: italic;
     opacity: 0.8;
-    text-align: left;
+    text-align: center;
 }
 
 .image-container {
@@ -107,8 +137,15 @@ h1 {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* ✅ New flex container for buttons */
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
 button {
-    margin: 10px;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: 500;
@@ -116,6 +153,7 @@ button {
     border-radius: 6px;
     cursor: pointer;
     transition: 0.3s;
+    white-space: nowrap;
 }
 
 #new-quote {
@@ -132,6 +170,25 @@ button:hover {
     opacity: 0.8;
 }
 
+@keyframes bling {
+    0% {
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.8);
+        transform: scale(1.1);
+    }
+    100% {
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0);
+        transform: scale(1);
+    }
+}
+
+.bling {
+    animation: bling 0.4s ease-out;
+}
+
 @media (max-width: 500px) {
     .quote-content {
         flex-direction: column;
@@ -143,5 +200,10 @@ button:hover {
 
     #author {
         text-align: center;
+    }
+
+    /* Optional: stack buttons if absolutely necessary */
+    .button-container {
+        flex-direction: row;
     }
 }
