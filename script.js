@@ -48,7 +48,7 @@ function getRandomColor(){
 function changeBackgroundColor() {
     const backgroundColor = getRandomColor();
     document.body.style.background = backgroundColor;
-    
+
     const brightness = getBrightness(backgroundColor);
 
     if (brightness > 128) {
@@ -120,11 +120,21 @@ function copyQuote() {
     const textToCopy = `${quoteText.textContent} ${authorText.textContent}`;
     
     navigator.clipboard.writeText(textToCopy).then(() => {
-        alert("Quote copied to clipboard!");
+        showCopyMessage();  // Show confirmation message when copied
     }).catch(err => {
         console.error("Error copying text: ", err);
     });
 }
+
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        btn.classList.remove('bling');
+        void btn.offsetWidth;
+        btn.classList.add('bling');
+    });
+});
 
 // Event Listeners
 newQuoteBtn.addEventListener("click", generateQuote);
@@ -133,3 +143,4 @@ copyQuoteBtn.addEventListener("click", copyQuote);
 // Generate an initial quote when the page loads
 generateQuote();
 generateRandomAnimalImage();
+
