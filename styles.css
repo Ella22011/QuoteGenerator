@@ -19,16 +19,16 @@ body {
 }
 
 .header {
-    width: 100%; /* Ulottuu koko näytön leveyteen */
+    width: 100%;
     background-color: rgba(255, 255, 255, 0.2);
-    padding: 20px; /* Voi säilyttää yläpaddauksen */
-    margin: 0; /* Poistaa marginaalit */
+    padding: 20px;
+    margin: 0;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    position: absolute; /* Varmistaa, että se menee aivan ylös */
-    top: 0; /* Laittaa sen sivun yläreunaan */
-    left: 0; /* Laittaa sen vasempaan reunaan */
-    right: 0; /* Varmistaa, että se ulottuu koko leveyteen */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .logo-container {
@@ -65,6 +65,16 @@ h1 {
     margin-bottom: 0;
 }
 
+.footer {
+    width: 100%; /* Ulottuu koko näytön leveyteen */
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 15px 0; /* Pieni sisennys ylhäältä ja alhaalta */
+    text-align: center; /* Keskittää tekstin */
+    position: fixed; /* Pysyy alareunassa */
+    bottom: 0; /* Sijoittaa footerin alas */
+    left: 0; /* Ulottuu vasempaan reunaan */
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+}
 .quote-box {
     background: rgba(255, 255, 255, 0.2);
     padding: 20px;
