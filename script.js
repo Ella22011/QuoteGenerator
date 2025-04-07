@@ -58,19 +58,25 @@ function changeBackgroundColor() {
     }
 }
 
-// Function to fetch a random dog image from the Dog CEO API
-function generateRandomDogImage() {
-    const dogApiUrl = "https://dog.ceo/api/breeds/image/random";  
+function generateRandomAnimalImage() {
+    const useCat = Math.random() > 0.5;
 
-    fetch(dogApiUrl)
-        .then(response => response.json())
-        .then(data => {
-            const dogImageUrl = data.message;  // Get the URL of the dog image from the response
-            randomImage.src = dogImageUrl;  // Set the image source to the dog image
-        })
-        .catch(error => {
-            console.error("Error fetching image from Dog CEO API:", error);
-        });
+    if (useCat) {
+        // Cataas provides direct image URLs
+        const catUrl = `https://cataas.com/cat?${new Date().getTime()}`; // Add cache buster
+        randomImage.src = catUrl;
+
+    } else {
+        const dogApiUrl = "https://dog.ceo/api/breeds/image/random";
+        fetch(dogApiUrl)
+            .then(response => response.json())
+            .then(data => {
+                randomImage.src = data.message;
+            })
+            .catch(error => {
+                console.error("Error fetching dog image:", error);
+            });
+    }
 }
 
 // Function to generate a quote (randomly from API or hardcoded list)
@@ -85,18 +91,18 @@ function generateQuote() {
                 quoteText.textContent = `"${data.quote}"`;
                 authorText.textContent = `- ${data.author || "Unknown"}`;
                 changeBackgroundColor();
-                generateRandomDogImage(); // Get a new random dog image
+                generateRandomAnimalImage()
             })
             .catch(error => {
                 console.error("Error fetching from API:", error);
                 getHardcodedQuote(); // Fallback to hardcoded quote
                 changeBackgroundColor();
-                generateRandomDogImage(); // Fetch a new random dog image
+                generateRandomAnimalImage()
             });
     } else {
         getHardcodedQuote();
         changeBackgroundColor();
-        generateRandomDogImage(); // Fetch a new random dog image
+        generateRandomAnimalImage()
     }
 }
 
@@ -126,4 +132,4 @@ copyQuoteBtn.addEventListener("click", copyQuote);
 
 // Generate an initial quote when the page loads
 generateQuote();
-generateRandomDogImage(); // Get a new random dog image
+generateRandomAnimalImage();
