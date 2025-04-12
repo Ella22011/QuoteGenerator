@@ -3,12 +3,12 @@ name: Label & comment issues
 on:
   issues:
     types:
-      - reopened
       - opened
-      - closed  # Added to trigger on issue closed
+      - closed
+      - reopened  # Trigger on issue opened, closed, and reopened
   pull_request:
     types:
-      - opened  # Added to trigger when a pull request is opened
+      - opened  # Trigger when a pull request is opened
 
 jobs:
   label_issues:
@@ -16,6 +16,9 @@ jobs:
     permissions:
       issues: write
     steps:
+      - name: Debug - Log issue event context
+        run: echo "Issue event context: ${{ toJson(github.event) }}"  # Logs the full event context for issues
+
       - name: Attach label to issues
         uses: actions/github-script@v6
         with:
@@ -26,6 +29,7 @@ jobs:
               repo: context.repo.repo,
               labels: ["issue", "fix"]
             })
+
       - name: Comment on new issue
         uses: peter-evans/create-or-update-comment@v1
         with:
@@ -37,8 +41,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    if: github.event.issue.state == 'closed'  # This condition ensures it only runs on closed issues
+    if: github.event.issue.state == 'closed'  # Ensures this runs only on closed issues
     steps:
+      - name: Debug - Log closed issue event context
+        run: echo "Closed issue event context: ${{ toJson(github.event) }}"  # Logs event context for closed issue
+
       - name: Comment on closed issue
         uses: peter-evans/create-or-update-comment@v1
         with:
@@ -73,5 +80,3 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Congratulations on opening your first pull request! 🎉
-
-
