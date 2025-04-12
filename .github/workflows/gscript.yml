@@ -3,15 +3,16 @@ name: Label & comment issues
 on:
   issues:
     types:
-      - reopened
       - opened
-      - closed  # Added to trigger on issue closed
+      - reopened
+      - closed  # Trigger on issue open, reopen, or close
   pull_request:
     types:
-      - opened  # Added to trigger when a pull request is opened
+      - opened  # Trigger when a pull request is opened
 
 jobs:
   label_issues:
+    if: github.event_name == 'issues'  # ✅ Run this job only for issue events
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -26,6 +27,7 @@ jobs:
               repo: context.repo.repo,
               labels: ["issue", "fix"]
             })
+
       - name: Comment on new issue opened or reopened
         if: github.event.action == 'opened' || github.event.action == 'reopened'
         uses: peter-evans/create-or-update-comment@v1
@@ -35,10 +37,10 @@ jobs:
             Thanks for opening this issue! We'll take a look as soon as possible.
 
   comment_on_closed_issue:
+    if: github.event_name == 'issues' && github.event.action == 'closed'  # Run this only when the issue is closed
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    if: ${{ github.event.issue.state == 'closed' }}
     steps:
       - name: Comment on closed issue
         uses: peter-evans/create-or-update-comment@v1
@@ -48,6 +50,7 @@ jobs:
             The issue is now resolved.
 
   congratulate_first_pr:
+    if: github.event_name == 'pull_request'  # ✅ Run only on PR events
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -58,7 +61,7 @@ jobs:
         with:
           script: |
             const creator = context.payload.pull_request.user.login;
-            
+
             // Fetch all PRs from the repo
             const opts = github.rest.pulls.list.endpoint.merge({
               owner: context.repo.owner,
@@ -66,18 +69,18 @@ jobs:
               state: 'all',
               per_page: 100
             });
-  
+
             // Paginate through PRs to get all of them
             const prs = await github.paginate(opts);
             
             // Filter to get PRs opened by the same user
             const userPrs = prs.filter(pr => pr.user.login === creator);
-  
+            
             // Check if the user has opened only 1 PR (this would be their first)
             return userPrs.length === 1 ? 'true' : 'false';
-  
+
       - name: Comment on first pull request
-        if: ${{ steps.first_pr_check.outputs.result == 'true' }}  # Proceed if it's the first PR
+        if: steps.first_pr_check.outputs.result == 'true'  # Proceed if it's the first PR
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
