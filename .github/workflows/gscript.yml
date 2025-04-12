@@ -26,7 +26,8 @@ jobs:
               repo: context.repo.repo,
               labels: ["issue", "fix"]
             })
-      - name: Comment on new issue
+      - name: Comment on new issue opened or reopened
+        if: github.event.action == 'opened' || github.event.action == 'reopened'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.issue.number }}
