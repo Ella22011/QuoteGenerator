@@ -56,18 +56,19 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const user = context.payload.pull_request.user.login;
-            const prs = await github.rest.pulls.list({
+            const creator = context.payload.pull_request.user.login;
+            const opts = github.rest.pulls.list.endpoint.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'all',
-              per_page: 100
+              state: 'all'
             });
-            const userPrs = prs.data.filter(pr => pr.user.login === user);
+            const prs = await github.paginate(opts);  # Use pagination to fetch all PRs
+            const userPrs = prs.filter(pr => pr.user.login === creator);
+
             return userPrs.length === 1 ? 'true' : 'false';
-          
+
       - name: Comment on first pull request
-        if: steps.first_pr_check.outputs.result == 'true'
+        if: ${{ steps.first_pr_check.outputs.result == 'true' }}  # Proceed only if it's the first PR
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
