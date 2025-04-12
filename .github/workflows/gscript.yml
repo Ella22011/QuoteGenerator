@@ -2,74 +2,76 @@ name: Label & comment issues
 
 on:
   issues:
-    types:
-      - reopened
-      - opened
-      - closed
+    types: [opened, reopened, closed]
   pull_request:
-    types:
-      - opened
+    types: [opened]
 
 jobs:
-  label_and_comment_issues:
-    if: github.event_name == 'issues'
+  label_and_comment_on_issues:
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - name: Attach label to issues
-        if: github.event.action == 'opened' || github.event.action == 'reopened'
-        uses: actions/github-script@v6
+      - name: Attach labels to issues
+        uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.addLabels({
+            if (['opened', 'reopened'].includes(context.payload.action)) {
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: ['issue', 'fix']
+              });
+            }
+
+      - name: Comment on issue opened or reopened
+        if: github.event.action == 'opened' || github.event.action == 'reopened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ["issue", "fix"]
-            })
-
-      - name: Comment on new or reopened issue
-        if: github.event.action == 'opened' || github.event.action == 'reopened'
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Thanks for opening this issue! We'll take a look as soon as possible.
-
-      - name: Comment on closed issue
-        if: github.event.action == 'closed'
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            ✅ The issue is now resolved. Thanks for contributing!
-
-  comment_on_first_pr:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Congratulate on first pull request
-        uses: actions/github-script@v7.0.1
-        with:
-          script: |
-            const { data: pulls } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'all',
-              per_page: 100
+              body: "Thank you for opening this issue. We will review it as soon as possible."
             });
 
-            const user = context.payload.pull_request.user.login;
-            const userPulls = pulls.filter(pr => pr.user.login === user);
+      - name: Comment when issue is closed
+        if: github.event.action == 'closed'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "The issue is now resolved."
+            });
 
-            if (userPulls.length === 1) {
+  welcome_new_pr:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Comment for first-time PR opener
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const creator = context.payload.sender.login;
+            const opts = github.rest.issues.listForRepo.endpoint.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator: creator,
+              state: 'all'
+            });
+            const issues = await github.paginate(opts);
+            const previousPRs = issues.filter(issue => issue.pull_request);
+
+            if (previousPRs.length === 0) {
               await github.rest.issues.createComment({
+                issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body: `🎉 Congratulations @${user} on opening your first pull request! We're excited to review it.`
+                body: `Welcome, ${creator}. Thank you for opening your first pull request. We will review it soon.`
               });
             }
