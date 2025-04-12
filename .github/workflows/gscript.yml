@@ -10,14 +10,14 @@ jobs:
   label_and_comment_on_issues:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      issues: write  # Make sure the token has write permissions
     steps:
       - name: Attach labels to issues
         uses: actions/github-script@v7
         with:
           script: |
-            if (['opened', 'reopened'].includes(context.eventName === 'issues' ? context.payload.action : '')) {
-              github.rest.issues.addLabels({
+            if (['opened', 'reopened'].includes(context.payload.action)) {
+              await github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -30,7 +30,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -42,7 +42,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -68,31 +68,10 @@ jobs:
             const previousPRs = issues.filter(issue => issue.pull_request);
 
             if (previousPRs.length === 0) {
-              github.rest.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: `Welcome, ${creator}. Thank you for opening your first pull request. We will review it soon.`
               });
             }
-
-  authenticate_with_token:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up GitHub Token
-        run: |
-          echo "GH_TOKEN=${{ secrets.GH_TOKEN }}" >> $GITHUB_ENV
-          
-      - name: Use GitHub Token for API access
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const octokit = github.getOctokit(process.env.GH_TOKEN);
-            // You can now make authenticated requests using octokit
-            console.log(await octokit.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            }));
