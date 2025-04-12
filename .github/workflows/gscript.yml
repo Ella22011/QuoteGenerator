@@ -8,6 +8,7 @@ on:
 
 jobs:
   label_and_comment_on_issues:
+    if: github.event_name == 'issues'  # ✅ Run this job only for issue events
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -50,10 +51,10 @@ jobs:
             });
 
   welcome_new_pr:
+    if: github.event_name == 'pull_request'  # ✅ Run only on PRs
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    if: github.event_name == 'pull_request'
     steps:
       - name: Comment for first-time PR opener
         uses: actions/github-script@v7
