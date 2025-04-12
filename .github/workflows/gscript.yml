@@ -16,6 +16,10 @@ jobs:
     permissions:
       issues: write
     steps:
+      - name: Check Token Permissions
+        run: |
+          echo "Listing available scopes for the GitHub token:"
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com
       - name: Attach label to issues
         uses: actions/github-script@v6
         with:
