@@ -58,18 +58,26 @@ jobs:
         with:
           script: |
             const creator = context.payload.pull_request.user.login;
+            
+            // Fetch all PRs from the repo
             const opts = github.rest.pulls.list.endpoint.merge({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'all'
+              state: 'all',
+              per_page: 100
             });
-            const prs = await github.paginate(opts);  # Use pagination to fetch all PRs
+  
+            // Paginate through PRs to get all of them
+            const prs = await github.paginate(opts);
+            
+            // Filter to get PRs opened by the same user
             const userPrs = prs.filter(pr => pr.user.login === creator);
-
+  
+            // Check if the user has opened only 1 PR (this would be their first)
             return userPrs.length === 1 ? 'true' : 'false';
-
+  
       - name: Comment on first pull request
-        if: ${{ steps.first_pr_check.outputs.result == 'true' }}  # Proceed only if it's the first PR
+        if: ${{ steps.first_pr_check.outputs.result == 'true' }}  # Proceed if it's the first PR
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
