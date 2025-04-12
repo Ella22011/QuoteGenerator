@@ -16,12 +16,8 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Check Token Permissions
-        run: |
-          echo "Listing available scopes for the GitHub token:"
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com
       - name: Attach label to issues
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             github.rest.issues.addLabels({
@@ -57,7 +53,7 @@ jobs:
     steps:
       - name: Check if it's the user's first pull request
         id: first_pr_check
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7 
         with:
           script: |
             const user = context.payload.pull_request.user.login;
