@@ -50,12 +50,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    if: github.event.pull_request.user.contributions == 1  # This ensures it's the first PR by the user
     steps:
+      - name: Check if it's the user's first pull request
+        id: first_pr_check
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const user = context.payload.pull_request.user.login;
+            const prs = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              per_page: 100
+            });
+            const userPrs = prs.data.filter(pr => pr.user.login === user);
+            return userPrs.length === 1 ? 'true' : 'false';
+          
       - name: Comment on first pull request
+        if: steps.first_pr_check.outputs.result == 'true'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Congratulations on opening your first pull request! 🎉
+
 
