@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    if: github.event.issue.state == 'closed'  # This condition ensures it only runs on closed issues
+    if: ${{ github.event.issue.state == 'closed' }}
     steps:
       - name: Comment on closed issue
         uses: peter-evans/create-or-update-comment@v1
