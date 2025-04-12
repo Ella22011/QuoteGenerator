@@ -49,40 +49,32 @@ jobs:
           body: |
             The issue is now resolved.
 
-  congratulate_first_pr:
-    if: github.event_name == 'pull_request'  # ✅ Run only on PR events
+  first_pr_greeting:
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
-      - name: Check if it's the user's first pull request
-        id: first_pr_check
+      - name: Check if it's the user's first PR
+        id: check
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
-            const creator = context.payload.pull_request.user.login;
-
-            // Fetch all PRs from the repo
-            const opts = github.rest.pulls.list.endpoint.merge({
+            const { data: pulls } = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'all',
+              state: "all",
               per_page: 100
             });
 
-            // Paginate through PRs to get all of them
-            const prs = await github.paginate(opts);
-            
-            // Filter to get PRs opened by the same user
-            const userPrs = prs.filter(pr => pr.user.login === creator);
-            
-            // Check if the user has opened only 1 PR (this would be their first)
-            return userPrs.length === 1 ? 'true' : 'false';
-
-      - name: Comment on first pull request
-        if: steps.first_pr_check.outputs.result == 'true'  # Proceed if it's the first PR
+            const userPRs = pulls.filter(pr => pr.user.login === context.payload.pull_request.user.login);
+            return userPRs.length === 1;
+      
+      - name: Congratulate on first PR
+        if: steps.check.outputs.result == 'true'
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            Congratulations on opening your first pull request! 🎉
+            🎉 Congratulations on opening your first pull request! Thank you for contributing!
